@@ -26,15 +26,14 @@ type Token struct {
 	ID string
 }
 
-type lexer struct {
+type Lexer struct {
 	cursor int
 	match  match
 	input  string
 	buffer string
-	tokens []Token
 }
 
-func (l *lexer) moveCursor() bool {
+func (l *Lexer) moveCursor() bool {
 	if !l.hasNextChar() {
 		return false
 	}
@@ -43,19 +42,19 @@ func (l *lexer) moveCursor() bool {
 	return true
 }
 
-func (l *lexer) hasNextChar() bool {
+func (l *Lexer) hasNextChar() bool {
 	return l.cursor+1 < len(l.input)
 }
 
-func (l *lexer) currentChar() byte {
+func (l *Lexer) currentChar() byte {
 	return l.input[l.cursor]
 }
 
-func (l *lexer) addToBuffer() {
+func (l *Lexer) addToBuffer() {
 	l.buffer += string(l.currentChar())
 }
 
-func (l *lexer) findMatch() {
+func (l *Lexer) findMatch() {
 	for _, rule := range rules {
 		if hasMatch, _ := regexp.MatchString(rule.regex, l.buffer); hasMatch {
 			l.match = match{cursor: l.cursor, length: len(l.buffer), rule: rule}
@@ -64,7 +63,7 @@ func (l *lexer) findMatch() {
 	}
 }
 
-func (l *lexer) logMatch() *Token {
+func (l *Lexer) logMatch() *Token {
 	if l.match.length == 0 {
 		return &Token{ID: "unknown"}
 	}
@@ -75,27 +74,27 @@ func (l *lexer) logMatch() *Token {
 	return token
 }
 
-func (l *lexer) clearMatch() {
+func (l *Lexer) clearMatch() {
 	l.buffer = ""
 	l.cursor = l.match.cursor
 	l.match = match{length: 0}
 }
 
-func Lex(input string) func() *Token {
-	l := lexer{cursor: -1, input: input}
+func NewLexer(input string) *Lexer {
+	return &Lexer{cursor: -1, input: input}
+}
 
-	return func() *Token {
-		var token *Token
+func (l *Lexer) Lex() *Token {
+	var token *Token
 
-		for l.moveCursor() {
-			l.addToBuffer()
-			l.findMatch()
-			if !l.hasNextChar() {
-				token = l.logMatch()
-				break
-			}
+	for l.moveCursor() {
+		l.addToBuffer()
+		l.findMatch()
+		if !l.hasNextChar() {
+			token = l.logMatch()
+			break
 		}
-
-		return token
 	}
+
+	return token
 }

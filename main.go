@@ -6,10 +6,10 @@ import (
 )
 
 func main() {
-	lex := syntax.Lex("123 + 3 / 2\n1+2")
+	lexer := syntax.NewLexer("123 + 3 / 2\n1+2")
 
 	for {
-		token := lex()
+		token := lexer.Lex()
 		if token == nil {
 			break
 		}
