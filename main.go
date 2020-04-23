@@ -1,14 +1,18 @@
 package main
 
 import (
-	"github.com/igorbelo/gocalc/syntax"
 	"fmt"
+	"github.com/igorbelo/gocalc/syntax"
 )
 
 func main() {
-	tokens := syntax.Lex("123 _a +  3 / 2 ")
+	lex := syntax.Lex("123 + 3 / 2\n1+2")
 
-	for _, token := range tokens {
+	for {
+		token := lex()
+		if token == nil {
+			break
+		}
 		fmt.Println(token.ID)
 	}
 }

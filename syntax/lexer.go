@@ -1,7 +1,6 @@
 package syntax
 
 import (
-	"fmt"
 	"regexp"
 )
 
@@ -11,11 +10,10 @@ type rule struct {
 }
 
 var rules []*rule = []*rule{
-  &rule{"integer",  "^[0-9]+$"},
-  &rule{"operator", "^[+\\-\\*\\/]$"},
-  &rule{"endl",     "^[;\n]$"},
-  &rule{"whtspc",   "^ $"},
-  &rule{"weird",    "^_a$"},
+	&rule{"integer", "^[0-9]+$"},
+	&rule{"operator", "^[+\\-\\*\\/]$"},
+	&rule{"endl", "^\n$"},
+	&rule{"whtspc", "^ $"},
 }
 
 type match struct {
@@ -66,31 +64,38 @@ func (l *lexer) findMatch() {
 	}
 }
 
-func (l *lexer) logMatch() {
-  if l.match.length == 0 {
-    fmt.Println("Unknown token")
-  } else {
-  	l.tokens = append(l.tokens, Token{ID: l.match.rule.id})
-    l.clearMatch();
-  }
+func (l *lexer) logMatch() *Token {
+	if l.match.length == 0 {
+		return &Token{ID: "unknown"}
+	}
+
+	token := &Token{ID: l.match.rule.id}
+	l.clearMatch()
+
+	return token
 }
 
 func (l *lexer) clearMatch() {
 	l.buffer = ""
 	l.cursor = l.match.cursor
-	l.match  = match{length: 0}
+	l.match = match{length: 0}
 }
 
-func Lex(input string) []Token {
+func Lex(input string) func() *Token {
 	l := lexer{cursor: -1, input: input}
 
-	for l.moveCursor() {
-		l.addToBuffer()
-		l.findMatch()
-		if !l.hasNextChar() {
-			l.logMatch()
-		}
-	}
+	return func() *Token {
+		var token *Token
 
-	return l.tokens
+		for l.moveCursor() {
+			l.addToBuffer()
+			l.findMatch()
+			if !l.hasNextChar() {
+				token = l.logMatch()
+				break
+			}
+		}
+
+		return token
+	}
 }
