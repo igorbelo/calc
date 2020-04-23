@@ -8,11 +8,8 @@ import (
 func main() {
 	lexer := syntax.NewLexer("123 + 3 / 2\n1+2")
 
-	for {
-		token := lexer.Lex()
-		if token == nil {
-			break
-		}
-		fmt.Println(token.ID)
+	for lexer.CanLex() {
+		token, buffer := lexer.Lex()
+		fmt.Println(token, buffer)
 	}
 }
