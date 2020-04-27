@@ -20,6 +20,9 @@ type CalcListener interface {
 	// EnterAddSub is called when entering the AddSub production.
 	EnterAddSub(c *AddSubContext)
 
+	// EnterInnerExpr is called when entering the InnerExpr production.
+	EnterInnerExpr(c *InnerExprContext)
+
 	// ExitStart is called when exiting the start production.
 	ExitStart(c *StartContext)
 
@@ -31,4 +34,7 @@ type CalcListener interface {
 
 	// ExitAddSub is called when exiting the AddSub production.
 	ExitAddSub(c *AddSubContext)
+
+	// ExitInnerExpr is called when exiting the InnerExpr production.
+	ExitInnerExpr(c *InnerExprContext)
 }

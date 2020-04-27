@@ -44,3 +44,9 @@ func (s *BaseCalcListener) EnterAddSub(ctx *AddSubContext) {}
 
 // ExitAddSub is called when production AddSub is exited.
 func (s *BaseCalcListener) ExitAddSub(ctx *AddSubContext) {}
+
+// EnterInnerExpr is called when production InnerExpr is entered.
+func (s *BaseCalcListener) EnterInnerExpr(ctx *InnerExprContext) {}
+
+// ExitInnerExpr is called when production InnerExpr is exited.
+func (s *BaseCalcListener) ExitInnerExpr(ctx *InnerExprContext) {}

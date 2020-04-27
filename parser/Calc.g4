@@ -15,4 +15,5 @@ expression
    : expression op=('*'|'/') expression # MulDiv
    | expression op=('+'|'-') expression # AddSub
    | NUMBER                             # Number
+   | '(' expression ')'                 # InnerExpr
    ;

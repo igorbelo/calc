@@ -101,6 +101,6 @@ func calc(input string) {
 }
 
 func main() {
-  calc("1 + 2 * 3")
+  calc("(1 + (2-3)) * 3")
   fmt.Println(m)
 }
